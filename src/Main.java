@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Main {
     public static final Scanner scanner = new Scanner(System.in);
     public static ArrayList<ArrayList<Integer>> relationshipGraph = new ArrayList<>();
