@@ -15,7 +15,7 @@ public class FileReader {
             int n = scanner.nextInt(); // Get the number of accounts
             int e = scanner.nextInt(); // Get number of total relationships
             RelationshipRecord[] relationships = new RelationshipRecord[2500]; // Initialize array of records
-            for (int i = 0; i < n; i++) { // Loop through each record
+            for (int i = 0; i < e; i++) { // Loop through each record
                 int person1 = scanner.nextInt(); // get person1
                 int person2 = scanner.nextInt(); // get person2
                 RelationshipRecord record = new RelationshipRecord(person1, person2); // instantiate a new Record object
