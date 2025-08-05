@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,22 +15,31 @@ public class Main {
             > display connections
          */
         FileReader fr = new FileReader();
-        RelationshipRecord[] relationships = fr.readFile("Network1.txt");
 
-        for (int j = 0; j < 5000; j++){
+        //Read file into relationships array
+
+        RelationshipRecord[] relationships = fr.readFile("data/Harvard1.txt");
+
+        //Add an arrayList of integers (empty) to each node
+        for (int j = 0; j <= relationships.length; j++){
             relationshipGraph.add(new ArrayList<>());
         }
 
-        for (int i = 0; i < relationships.length; i++){
-            // relationships[i] = (1, 2)
-            int person1 = relationships[i].getPerson1();
-            int person2 = relationships[i].getPerson2();
 
-            relationshipGraph.get(person1).add(person2);
-            relationshipGraph.get(person2).add(person1);
+        for (RelationshipRecord relationship : relationships) {
+            // relationships[i] = (1, 2)
+
+            int person1 = relationship.getPerson1();
+            int person2 = relationship.getPerson2();
+
+
+            if(!relationshipGraph.get(person1).contains(person2) && !relationshipGraph.get(person2).contains(person1)) {
+                relationshipGraph.get(person1).add(person2);
+                relationshipGraph.get(person2).add(person1);
+            }
         }
 
-
+/*
         for (int k = 0; k <relationships.length; k++){
             int[] friends = new int[2500];
             int number = 0;
@@ -45,29 +55,34 @@ public class Main {
             for (int m = 0; m < number ; m++){
                 System.out.println(friends[m]);
             }
-        }
+       }
+
+ */
 
         displayMenu();
     }
 
     public static void displayMenu() {
-        System.out.println("- - - - - - - - - - - - - - - -");
-        System.out.println("             MCO2");
-        System.out.println("- - - - - - - - - - - - - - - -");
-        System.out.println("\n1. Display Friend List");
-        System.out.println("2. Display Connections");
-        System.out.println("0. Exit Program");
-        System.out.println("- - - - - - - - - - - - - - - -");
-        System.out.println("\nEnter choice: ");
-        int choice = scanner.nextInt();
 
-        switch(choice) {
-            case 1: displayFriendList();
-            break;
-            case 2: displayConnections();
-            break;
-            case 0: System.exit(0);
-            break;
+        while (true) {
+            System.out.println("- - - - - - - - - - - - - - - -");
+            System.out.println("             MCO2");
+            System.out.println("- - - - - - - - - - - - - - - -");
+            System.out.println("\n1. Display Friend List");
+            System.out.println("2. Display Connections");
+            System.out.println("0. Exit Program");
+            System.out.println("- - - - - - - - - - - - - - - -");
+            System.out.print("\nEnter choice: ");
+            int choice = scanner.nextInt();
+
+            switch(choice) {
+                case 1: displayFriendList();
+                    break;
+                case 2: displayConnections();
+                    break;
+                case 0: System.exit(0);
+                    break;
+            }
         }
 
     }
@@ -79,7 +94,7 @@ public class Main {
         - otherwise, program must display the following:
             > friends of the person
             > total number of friends
-         */
+    */
     public static void displayFriendList() {
         System.out.print("Input ID number: ");
         int idNum = scanner.nextInt();
@@ -106,7 +121,45 @@ public class Main {
     public static void displayConnections() {
         System.out.print("Input first ID number: ");
         int idNum1 = scanner.nextInt();
+
+
+        if (idNum1 < 0 || idNum1 >= relationshipGraph.size() || relationshipGraph.get(idNum1).isEmpty()) {
+            System.out.println("Error: ID number does not exist or has no friends.");
+            return;
+        }
+
         System.out.print("Input second ID number: ");
         int idNum2 = scanner.nextInt();
+
+        if (idNum2 < 0 || idNum2 >= relationshipGraph.size() || relationshipGraph.get(idNum2).isEmpty()) {
+            System.out.println("Error: ID number does not exist or has no friends.");
+            return;
+        }
+
+        ArrayList<Integer> mutualFriends = new ArrayList<>();
+
+        ArrayList<Integer> friendsOfOne = relationshipGraph.get(idNum1);
+        ArrayList<Integer> friendsOfTwo = relationshipGraph.get(idNum2);
+
+        //loop sa friends of 1
+        for (Integer friendOne : friendsOfOne) {
+            //loop sa friends 2 while checking for each friends of 1
+            for (Integer friendsTwo : friendsOfTwo){
+                //checking
+                if (friendOne.equals(friendsTwo) && !mutualFriends.contains(friendOne)){
+                    mutualFriends.add(friendOne);
+                }
+            }
+        }
+
+        System.out.printf("Mutual Connections: %d\n", mutualFriends.size());
+        if(mutualFriends.isEmpty()){
+            System.out.println("No mutual connections found.");
+        }else{
+            for (Integer mutualFriendsId : mutualFriends){
+                System.out.println("- " + mutualFriendsId);
+            }
+        }
+
     }
 }
